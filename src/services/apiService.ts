@@ -1,7 +1,7 @@
 import IpAddress from "../models/IpAdress.js";
 
 const API_KEY = "at_cc4VlfzpyO613DEh0VJwE6H11baOL";
-const BASE_URL = "https://geo.ipify.org/api/v2/country?apiKey=";
+const BASE_URL = "https://geo.ipify.org/api/v2/country,city?apiKey=";
 
 export default async function getIpAdress(ipParameter: string): Promise<IpAddress> {
     try {
@@ -18,7 +18,12 @@ export default async function getIpAdress(ipParameter: string): Promise<IpAddres
             data.ip,
             data.location.country,
             data.location.region,
+            data.location.city,
+            data.location.lat,
+            data.location.lng,
+            data.location.postalCode,
             data.location.timezone,
+            data.location.geonameId,
             data.domains,
             data.as.asn,
             data.as.name,

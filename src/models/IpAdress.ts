@@ -1,7 +1,12 @@
 interface location {
   country: string;
   region: string;
+  city: string;
+  lat: number;
+  lng: number;
+  postalCode: string;
   timezone: string;
+  geonameId: number;
 }
 
 interface as {
@@ -23,7 +28,12 @@ export default class IpAddress {
     ip: string,
     country: string,
     region: string,
+    city: string,
+    lat: number,
+    lng: number,
+    postalCode: string,
     timezone: string,
+    geonameId: number,
     domains: string[],
     asn: number,
     name: string,
@@ -36,7 +46,12 @@ export default class IpAddress {
     this._location = {
       country,
       region,
+      city,
+      lat,
+      lng,
+      postalCode,
       timezone,
+      geonameId
     };
     this._domains = domains;
     this._as = {
