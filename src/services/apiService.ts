@@ -3,9 +3,10 @@ import IpAddress from "../models/IpAdress.js";
 const API_KEY = "at_cc4VlfzpyO613DEh0VJwE6H11baOL";
 const BASE_URL = "https://geo.ipify.org/api/v2/country,city?apiKey=";
 
-export default async function getIpAdress(ipParameter: string): Promise<IpAddress> {
+
+export default async function getIpAdress(inputParameter: string, queryType: string): Promise<IpAddress> {
     try {
-        const url = `${BASE_URL}${API_KEY}&ipAddress=${ipParameter}`;
+        const url = `${BASE_URL}${API_KEY}&${queryType}=${inputParameter}`;
         const response = await fetch(url);
 
         if (!response.ok) {

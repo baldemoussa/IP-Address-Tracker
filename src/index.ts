@@ -2,16 +2,17 @@ import getIpAdress from './services/apiService.js';
 import IpAddress from './models/IpAdress.js';
 // import * as L from 'leaflet';
 
-let searchInput = document.getElementById("search-input") as HTMLInputElement;
-let searchButton = document.getElementById("search-btn") as HTMLButtonElement;
-let ipAddressDisplay = document.getElementById("ip-display") as HTMLInputElement;
-let locationDisplay = document.getElementById("location-display") as HTMLInputElement;
-let timezoneDisplay = document.getElementById("timezone-display") as HTMLInputElement;
-let ispDisplay = document.getElementById("isp-display") as HTMLInputElement;
-let errorMessage = document.getElementById("error-message") as HTMLParagraphElement;
+const searchInput = document.getElementById("search-input") as HTMLInputElement;
+const searchButton = document.getElementById("search-btn") as HTMLButtonElement;
+const ipAddressDisplay = document.getElementById("ip-display") as HTMLInputElement;
+const locationDisplay = document.getElementById("location-display") as HTMLInputElement;
+const timezoneDisplay = document.getElementById("timezone-display") as HTMLInputElement;
+const ispDisplay = document.getElementById("isp-display") as HTMLInputElement;
+const errorMessage = document.getElementById("error-message") as HTMLParagraphElement;
 
 let map: L.Map | null = null;
-const defaultIp = "8.8.8.8";
+let defaultIp = "8.8.8.8";
+let defaultQueryType: string = "ipAddress";
 
 
 function loadInfoCardData(dataResponse: IpAddress) {
@@ -45,29 +46,14 @@ async function loadMap(location: string, lat: number, lng: number): Promise<L.Ma
     }
 }
 
-function renderMap(ip: string = defaultIp) {
-    getIpAdress(ip).then((data) => {
-        loadInfoCardData(new IpAddress(data.ip, 
-            data.location.country, 
-            data.location.region, 
-            data.location.city, 
-            data.location.lat, 
-            data.location.lng, 
-            data.location.postalCode,
-            data.location.timezone, 
-            data.location.geonameId,
-            data.domains, 
-            data.as.asn, 
-            data.as.name, 
-            data.as.route, 
-            data.as.domain, 
-            data.as.type, 
-            data.isp))
+function renderMap(inputParameter: string = defaultIp, queryType: string = defaultQueryType) {
+    getIpAdress(inputParameter, queryType).then((data) => {
+        loadInfoCardData(data)
         loadMap(`${data.location.region}, 
                 ${data.location.country}, 
                 ${data.location.city}  
-                ${data.location.postalCode}`, 
-                data.location.lat, data.location.lng);
+                ${data.location.postalCode}`,
+            data.location.lat, data.location.lng);
     });
 }
 
@@ -78,23 +64,43 @@ window.addEventListener('load', function () {
 
 
 searchInput.addEventListener("input", () => {
-    if (searchInput.value) {
-        const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
-        const isValidIp = ipRegex.test(searchInput.value);
-        errorMessage.innerHTML = isValidIp ? "<span class='valid'>Your IP Address is valid, proceed to search</span>" : "<span class='invalid'>Please enter a valid IP address.</span>";
+    const value = searchInput.value.trim();
+
+    if (value) {
+
+        const ipRegex = /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+        const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        const domainRegex = /^(?!:-)(?:[a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,}$/;
+
+        const isValidIp = ipRegex.test(value);
+        const isValidEmail = emailRegex.test(value);
+        const isValidDomain = domainRegex.test(value);
+
+        if (isValidIp) {
+            errorMessage.innerHTML = "<span class='valid'>Valid IP Address, proceed to search</span>";
+            defaultQueryType = "ipAddress";
+        } else if (isValidEmail) {
+            errorMessage.innerHTML = "<span class='valid'>Valid Email Address, proceed to search</span>";
+            defaultQueryType = "email"
+        } else if (isValidDomain) {
+            errorMessage.innerHTML = "<span class='valid'>Valid Domain Name, proceed to search</span>";
+            defaultQueryType = "domain"
+        } else {
+            errorMessage.innerHTML = "<span class='invalid'>Please enter a valid IP address, Email, or Domain.</span>";
+        }
     } else {
         errorMessage.innerHTML = "";
-    }   
-})
+    }
+});
 
 searchButton.addEventListener("click", () => {
-    renderMap(searchInput.value);
+    renderMap(searchInput.value, defaultQueryType);
     errorMessage.innerHTML = "";
 });
 
 searchInput.addEventListener("keydown", (event: KeyboardEvent) => {
     if (event.key === "Enter") {
-        renderMap(searchInput.value);
+        renderMap(searchInput.value, defaultQueryType);
         errorMessage.innerHTML = "";
     }
 });
