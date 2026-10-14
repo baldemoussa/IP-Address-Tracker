@@ -1,5 +1,7 @@
 # IP Address Tracker
 
+## By [Mamadou Moussa Balde](https://www.linkedin.com/in/2mb/)
+
 A one-page tracker. The heading is "IP Address Tracker". The typeface is Rubik. The page loads `dist/index.js`, which is the compiled copy of `src/index.ts`, and it loads Leaflet from the unpkg script in `index.html`.
 
 Serve this folder and open `index.html`. The script is a module, so it needs a local server. This run used http://127.0.0.1:5522/.
