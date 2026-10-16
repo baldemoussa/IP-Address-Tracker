@@ -34,7 +34,14 @@ async function loadMap(location: string, lat: number, lng: number): Promise<L.Ma
             attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
         }).addTo(map);
 
-        L.marker([lat, lng])
+        const markerIcon = L.icon({
+            iconUrl: "images/icon-location.svg",
+            iconSize: [46, 56],
+            iconAnchor: [23, 56],
+            popupAnchor: [0, -48],
+        });
+
+        L.marker([lat, lng], { icon: markerIcon })
             .addTo(map)
             .bindPopup(`<b>${location}</b>`)
             .openPopup();
