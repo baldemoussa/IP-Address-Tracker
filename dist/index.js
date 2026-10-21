@@ -1,5 +1,6 @@
 import getIpAdress from './services/apiService.js';
 import IpAddress from './models/IpAdress.js';
+// import * as L from 'leaflet';
 const searchInput = document.getElementById("search-input");
 const searchButton = document.getElementById("search-btn");
 const ipAddressDisplay = document.getElementById("ip-display");

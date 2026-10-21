@@ -1,6 +1,6 @@
 import getIpAdress from './services/apiService.js';
 import IpAddress from './models/IpAdress.js';
-import type { Map as LeafletMap } from "leaflet";
+// import * as L from 'leaflet';
 
 const searchInput = document.getElementById("search-input") as HTMLInputElement;
 const searchButton = document.getElementById("search-btn") as HTMLButtonElement;
@@ -10,7 +10,7 @@ const timezoneDisplay = document.getElementById("timezone-display") as HTMLInput
 const ispDisplay = document.getElementById("isp-display") as HTMLInputElement;
 const errorMessage = document.getElementById("error-message") as HTMLParagraphElement;
 
-let map: LeafletMap | null = null;
+let map: L.Map | null = null;
 let defaultIp = "8.8.8.8";
 let defaultQueryType: string = "ipAddress";
 
@@ -23,7 +23,7 @@ function loadInfoCardData(dataResponse: IpAddress) {
 }
 
 
-async function loadMap(location: string, lat: number, lng: number): Promise<LeafletMap | null> {
+async function loadMap(location: string, lat: number, lng: number): Promise<L.Map | null> {
     try {
         if (map) {
             map.remove();
