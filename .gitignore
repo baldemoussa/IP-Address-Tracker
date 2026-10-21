@@ -23,6 +23,9 @@ npm-debug.log*
 
 # Production
 /build
+/dist/index.html
+/dist/style.css
+/dist/images/
 
 /.next
 /out
